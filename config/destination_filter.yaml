@@ -1,0 +1,53 @@
+# Destination filter settings for Value Vacation Finder
+# This controls which destinations are active for a given search run.
+# The full destination universe remains in config/destinations_watchlist.yaml.
+
+search_mode: mvp_watchlist
+
+origin:
+  city: Boston
+  airport_code: BOS
+
+trip_duration:
+  min_days: 7
+  max_days: 21
+
+mvp_filters:
+  enabled: true
+  max_destinations: 10
+
+  include_regions:
+    - Europe
+    - North America
+
+  include_countries:
+    - Portugal
+    - Spain
+    - Italy
+    - Greece
+    - Canada
+    - Mexico
+
+  include_cities:
+    - Lisbon
+    - Porto
+    - Barcelona
+    - Rome
+    - Athens
+    - Montreal
+    - Mexico City
+
+  exclude_cities: []
+
+safety_filters:
+  require_travel_advisory_check: true
+  reject_level_4: true
+  flag_level_3: true
+  allow_level_2_with_caution: true
+
+airport_filters:
+  require_airport_code: true
+  allow_multiple_airports: true
+  require_airport_validation_before_live_search: true
+
+manual_run_only: true

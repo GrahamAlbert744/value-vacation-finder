@@ -1,0 +1,174 @@
+# Source configuration for Value Vacation Finder
+# This file defines what each data source is responsible for.
+# It does not store API keys or private credentials.
+
+sources:
+
+  skyscanner:
+    enabled: true
+    source_type: connector
+    primary_role: flights
+    raw_data_folder: data/raw/skyscanner
+    interim_data_folder: data/interim/cleaned_flights
+    expected_outputs:
+      - origin_airport
+      - destination_airport
+      - departure_date
+      - return_date
+      - airline
+      - stops
+      - duration
+      - price
+      - fare_class
+      - booking_provider
+    notes: >
+      Primary source for flight discovery and flight pricing.
+      Use for Boston/BOS to destination airport searches.
+
+  expedia:
+    enabled: true
+    source_type: connector
+    primary_role: hotels_and_comps
+    secondary_roles:
+      - flights
+      - package_comparison
+    raw_data_folder: data/raw/expedia
+    interim_data_folder: data/interim/cleaned_hotels
+    expected_outputs:
+      - hotel_name
+      - destination_city
+      - check_in_date
+      - check_out_date
+      - total_price
+      - nightly_price
+      - guest_rating
+      - star_rating
+      - amenities
+      - cancellation_policy
+      - booking_url
+    notes: >
+      Primary source for hotel pricing and possible flight/hotel package comparison.
+      May also be used as a secondary flight-price benchmark.
+
+  tripadvisor:
+    enabled: true
+    source_type: connector
+    primary_role: hotel_quality_reviews
+    secondary_roles:
+      - hotel_comparison
+      - location_quality
+    raw_data_folder: data/raw/tripadvisor
+    interim_data_folder: data/interim/cleaned_hotels
+    expected_outputs:
+      - hotel_name
+      - destination_city
+      - bubble_rating
+      - review_count
+      - location_score
+      - cleanliness_score
+      - service_score
+      - value_score
+      - amenities
+      - traveler_ranking
+    notes: >
+      Primary source for hotel review quality, value signals, and location quality.
+      Use to detect hotels that are cheap for a bad reason.
+
+  viator:
+    enabled: true
+    source_type: connector
+    primary_role: attractions_tours
+    raw_data_folder: data/raw/viator
+    interim_data_folder: data/interim/cleaned_attractions
+    expected_outputs:
+      - experience_name
+      - destination_city
+      - available_dates
+      - price
+      - rating
+      - review_count
+      - duration
+      - category
+      - booking_url
+    notes: >
+      Primary source for tours, attractions, activities, and experience pricing.
+      Use to estimate activity value and destination richness.
+
+  travel_advisory:
+    enabled: true
+    source_type: connector
+    primary_role: safety_risk
+    raw_data_folder: data/raw/travel_advisory
+    interim_data_folder: data/interim/destination_risk
+    expected_outputs:
+      - country
+      - advisory_level
+      - advisory_summary
+      - key_risks
+      - safety_recommendations
+      - traveler_impact
+      - source_date
+    notes: >
+      Primary source for safety and travel-risk screening.
+      Use before treating a destination as eligible.
+
+  benchmark_prices:
+    enabled: false
+    source_type: future_module
+    primary_role: fair_value_estimation
+    raw_data_folder: data/raw/benchmark_prices
+    interim_data_folder: data/interim/benchmark_prices
+    expected_outputs:
+      - destination_city
+      - destination_country
+      - season
+      - typical_flight_price
+      - typical_hotel_nightly_price
+      - typical_activity_cost
+      - fair_trip_value_estimate
+    notes: >
+      Placeholder for later benchmark logic.
+      In the MVP, fair value can be estimated from simple comparable prices.
+
+source_priority:
+
+  flights:
+    primary: skyscanner
+    secondary: expedia
+
+  hotels:
+    primary: expedia
+    secondary: tripadvisor
+
+  hotel_quality:
+    primary: tripadvisor
+    secondary: expedia
+
+  attractions_tours:
+    primary: viator
+    secondary: tripadvisor
+
+  safety_risk:
+    primary: travel_advisory
+    secondary: manual_review
+
+  benchmarks:
+    primary: expedia
+    secondary: benchmark_prices
+
+manual_collection_rules:
+  same_destination_required: true
+  same_date_range_required: true
+  same_traveler_count_required: true
+  origin_airport: BOS
+  default_currency: USD
+  default_locale: en-US
+  raw_outputs_must_be_saved: true
+  private_or_sensitive_outputs_should_not_be_committed: true
+
+mvp_source_order:
+  - travel_advisory
+  - skyscanner
+  - expedia
+  - tripadvisor
+  - viator

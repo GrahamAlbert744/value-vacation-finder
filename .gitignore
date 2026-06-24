@@ -1,0 +1,34 @@
+# Environment files
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Conda / Python
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+
+# Data folders: keep private/local data out of GitHub
+data/raw/
+data/interim/
+data/processed/
+data/external/
+
+# Reports that may contain private travel details
+reports/final_reports/
+reports/tables/
+reports/figures/
+
+# Secrets
+*.key
+*.secret
+*.pem
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

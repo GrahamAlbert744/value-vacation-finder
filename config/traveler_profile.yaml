@@ -1,0 +1,39 @@
+home_airport:
+  city: Boston
+  preferred_airports:
+    - BOS
+
+travelers:
+  - name: Graham
+    residency: USA
+    citizenship: Canada
+    passport_country: Canada
+
+  - name: Anjali
+    residency: USA
+    citizenship: USA
+    passport_country: USA
+
+party_size:
+  adults: 2
+  children: 0
+
+trip_length:
+  min_days: 7
+  max_days: 21
+
+currency:
+  default: USD
+
+locale:
+  default: en-US
+
+travel_style:
+  lodging_quality_minimum: good
+  hotel_review_minimum: 4.0
+  avoid_basic_economy: true
+  prefer_reasonable_flight_duration: true
+  prefer_safe_destinations: true
+  avoid_high_conflict_or_advisory_risk: true
+
+manual_update_only: true

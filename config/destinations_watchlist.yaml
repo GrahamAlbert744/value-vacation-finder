@@ -1,0 +1,922 @@
+# Value Vacation Finder destination universe
+# Notes:
+# - Airport codes should be validated before live connector use.
+# - Population threshold is approximate.
+# - Some cities use nearby/practical airports rather than city-center airports.
+
+destinations:
+
+  # -------------------------
+  # EU CAPITALS
+  # -------------------------
+
+  - city: Vienna
+    country: Austria
+    airport_codes: [VIE]
+    region: Europe
+    group: EU capital
+
+  - city: Brussels
+    country: Belgium
+    airport_codes: [BRU]
+    region: Europe
+    group: EU capital
+
+  - city: Sofia
+    country: Bulgaria
+    airport_codes: [SOF]
+    region: Europe
+    group: EU capital
+
+  - city: Zagreb
+    country: Croatia
+    airport_codes: [ZAG]
+    region: Europe
+    group: EU capital
+
+  - city: Nicosia
+    country: Cyprus
+    airport_codes: [LCA]
+    region: Europe
+    group: EU capital
+    notes: Primary international airport is Larnaca.
+
+  - city: Prague
+    country: Czechia
+    airport_codes: [PRG]
+    region: Europe
+    group: EU capital
+
+  - city: Copenhagen
+    country: Denmark
+    airport_codes: [CPH]
+    region: Europe
+    group: EU capital
+
+  - city: Tallinn
+    country: Estonia
+    airport_codes: [TLL]
+    region: Europe
+    group: EU capital
+
+  - city: Helsinki
+    country: Finland
+    airport_codes: [HEL]
+    region: Europe
+    group: EU capital
+
+  - city: Paris
+    country: France
+    airport_codes: [CDG, ORY]
+    region: Europe
+    group: EU capital
+
+  - city: Berlin
+    country: Germany
+    airport_codes: [BER]
+    region: Europe
+    group: EU capital
+
+  - city: Athens
+    country: Greece
+    airport_codes: [ATH]
+    region: Europe
+    group: EU capital
+
+  - city: Budapest
+    country: Hungary
+    airport_codes: [BUD]
+    region: Europe
+    group: EU capital
+
+  - city: Dublin
+    country: Ireland
+    airport_codes: [DUB]
+    region: Europe
+    group: EU capital
+
+  - city: Rome
+    country: Italy
+    airport_codes: [FCO, CIA]
+    region: Europe
+    group: EU capital
+
+  - city: Riga
+    country: Latvia
+    airport_codes: [RIX]
+    region: Europe
+    group: EU capital
+
+  - city: Vilnius
+    country: Lithuania
+    airport_codes: [VNO]
+    region: Europe
+    group: EU capital
+
+  - city: Luxembourg
+    country: Luxembourg
+    airport_codes: [LUX]
+    region: Europe
+    group: EU capital
+
+  - city: Valletta
+    country: Malta
+    airport_codes: [MLA]
+    region: Europe
+    group: EU capital
+
+  - city: Amsterdam
+    country: Netherlands
+    airport_codes: [AMS]
+    region: Europe
+    group: EU capital
+
+  - city: Warsaw
+    country: Poland
+    airport_codes: [WAW]
+    region: Europe
+    group: EU capital
+
+  - city: Lisbon
+    country: Portugal
+    airport_codes: [LIS]
+    region: Europe
+    group: EU capital
+
+  - city: Bucharest
+    country: Romania
+    airport_codes: [OTP]
+    region: Europe
+    group: EU capital
+
+  - city: Bratislava
+    country: Slovakia
+    airport_codes: [BTS, VIE]
+    region: Europe
+    group: EU capital
+    notes: Vienna may be a practical alternate airport.
+
+  - city: Ljubljana
+    country: Slovenia
+    airport_codes: [LJU]
+    region: Europe
+    group: EU capital
+
+  - city: Madrid
+    country: Spain
+    airport_codes: [MAD]
+    region: Europe
+    group: EU capital
+
+  - city: Stockholm
+    country: Sweden
+    airport_codes: [ARN]
+    region: Europe
+    group: EU capital
+
+  # -------------------------
+  # EU LARGE CITIES / MAJOR METROS
+  # -------------------------
+
+  - city: Barcelona
+    country: Spain
+    airport_codes: [BCN]
+    region: Europe
+    group: EU large city
+
+  - city: Valencia
+    country: Spain
+    airport_codes: [VLC]
+    region: Europe
+    group: EU large city
+
+  - city: Seville
+    country: Spain
+    airport_codes: [SVQ]
+    region: Europe
+    group: EU major city
+
+  - city: Milan
+    country: Italy
+    airport_codes: [MXP, LIN, BGY]
+    region: Europe
+    group: EU large city
+
+  - city: Naples
+    country: Italy
+    airport_codes: [NAP]
+    region: Europe
+    group: EU large city
+
+  - city: Turin
+    country: Italy
+    airport_codes: [TRN]
+    region: Europe
+    group: EU major city
+
+  - city: Munich
+    country: Germany
+    airport_codes: [MUC]
+    region: Europe
+    group: EU large city
+
+  - city: Hamburg
+    country: Germany
+    airport_codes: [HAM]
+    region: Europe
+    group: EU large city
+
+  - city: Cologne
+    country: Germany
+    airport_codes: [CGN]
+    region: Europe
+    group: EU large city
+
+  - city: Frankfurt
+    country: Germany
+    airport_codes: [FRA]
+    region: Europe
+    group: EU major city
+
+  - city: Lyon
+    country: France
+    airport_codes: [LYS]
+    region: Europe
+    group: EU large metro
+
+  - city: Marseille
+    country: France
+    airport_codes: [MRS]
+    region: Europe
+    group: EU large city
+
+  - city: Toulouse
+    country: France
+    airport_codes: [TLS]
+    region: Europe
+    group: EU major city
+
+  - city: Lille
+    country: France
+    airport_codes: [LIL]
+    region: Europe
+    group: EU large metro
+
+  - city: Rotterdam
+    country: Netherlands
+    airport_codes: [RTM, AMS]
+    region: Europe
+    group: EU major city
+
+  - city: The Hague
+    country: Netherlands
+    airport_codes: [RTM, AMS]
+    region: Europe
+    group: EU major city
+
+  - city: Porto
+    country: Portugal
+    airport_codes: [OPO]
+    region: Europe
+    group: EU major city
+
+  - city: Krakow
+    country: Poland
+    airport_codes: [KRK]
+    region: Europe
+    group: EU major city
+
+  - city: Lodz
+    country: Poland
+    airport_codes: [LCJ, WAW]
+    region: Europe
+    group: EU major city
+
+  - city: Wroclaw
+    country: Poland
+    airport_codes: [WRO]
+    region: Europe
+    group: EU major city
+
+  - city: Gdansk
+    country: Poland
+    airport_codes: [GDN]
+    region: Europe
+    group: EU major city
+
+  # -------------------------
+  # SOUTH AMERICA CAPITALS
+  # -------------------------
+
+  - city: Buenos Aires
+    country: Argentina
+    airport_codes: [EZE, AEP]
+    region: South America
+    group: capital
+
+  - city: La Paz
+    country: Bolivia
+    airport_codes: [LPB]
+    region: South America
+    group: administrative capital
+
+  - city: Sucre
+    country: Bolivia
+    airport_codes: [SRE]
+    region: South America
+    group: constitutional capital
+
+  - city: Brasilia
+    country: Brazil
+    airport_codes: [BSB]
+    region: South America
+    group: capital
+
+  - city: Santiago
+    country: Chile
+    airport_codes: [SCL]
+    region: South America
+    group: capital
+
+  - city: Bogota
+    country: Colombia
+    airport_codes: [BOG]
+    region: South America
+    group: capital
+
+  - city: Quito
+    country: Ecuador
+    airport_codes: [UIO]
+    region: South America
+    group: capital
+
+  - city: Georgetown
+    country: Guyana
+    airport_codes: [GEO]
+    region: South America
+    group: capital
+
+  - city: Asuncion
+    country: Paraguay
+    airport_codes: [ASU]
+    region: South America
+    group: capital
+
+  - city: Lima
+    country: Peru
+    airport_codes: [LIM]
+    region: South America
+    group: capital
+
+  - city: Paramaribo
+    country: Suriname
+    airport_codes: [PBM]
+    region: South America
+    group: capital
+
+  - city: Montevideo
+    country: Uruguay
+    airport_codes: [MVD]
+    region: South America
+    group: capital
+
+  # -------------------------
+  # SOUTH AMERICA LARGE CITIES
+  # -------------------------
+
+  - city: Sao Paulo
+    country: Brazil
+    airport_codes: [GRU, CGH, VCP]
+    region: South America
+    group: 1m+ city
+
+  - city: Rio de Janeiro
+    country: Brazil
+    airport_codes: [GIG, SDU]
+    region: South America
+    group: 1m+ city
+
+  - city: Salvador
+    country: Brazil
+    airport_codes: [SSA]
+    region: South America
+    group: 1m+ city
+
+  - city: Fortaleza
+    country: Brazil
+    airport_codes: [FOR]
+    region: South America
+    group: 1m+ city
+
+  - city: Belo Horizonte
+    country: Brazil
+    airport_codes: [CNF, PLU]
+    region: South America
+    group: 1m+ city
+
+  - city: Recife
+    country: Brazil
+    airport_codes: [REC]
+    region: South America
+    group: 1m+ city
+
+  - city: Curitiba
+    country: Brazil
+    airport_codes: [CWB]
+    region: South America
+    group: 1m+ city
+
+  - city: Porto Alegre
+    country: Brazil
+    airport_codes: [POA]
+    region: South America
+    group: 1m+ city
+
+  - city: Medellin
+    country: Colombia
+    airport_codes: [MDE]
+    region: South America
+    group: 1m+ city
+
+  - city: Cali
+    country: Colombia
+    airport_codes: [CLO]
+    region: South America
+    group: 1m+ city
+
+  - city: Barranquilla
+    country: Colombia
+    airport_codes: [BAQ]
+    region: South America
+    group: 1m+ city
+
+  - city: Guayaquil
+    country: Ecuador
+    airport_codes: [GYE]
+    region: South America
+    group: 1m+ city
+
+  - city: Cordoba
+    country: Argentina
+    airport_codes: [COR]
+    region: South America
+    group: 1m+ city
+
+  - city: Rosario
+    country: Argentina
+    airport_codes: [ROS]
+    region: South America
+    group: major city
+
+  - city: Arequipa
+    country: Peru
+    airport_codes: [AQP]
+    region: South America
+    group: major city
+
+  # -------------------------
+  # CENTRAL AMERICA CAPITALS AND LARGE CITIES
+  # -------------------------
+
+  - city: Belize City
+    country: Belize
+    airport_codes: [BZE]
+    region: Central America
+    group: former capital / main international gateway
+
+  - city: Belmopan
+    country: Belize
+    airport_codes: [BZE]
+    region: Central America
+    group: capital
+
+  - city: San Jose
+    country: Costa Rica
+    airport_codes: [SJO]
+    region: Central America
+    group: capital
+
+  - city: San Salvador
+    country: El Salvador
+    airport_codes: [SAL]
+    region: Central America
+    group: capital
+
+  - city: Guatemala City
+    country: Guatemala
+    airport_codes: [GUA]
+    region: Central America
+    group: capital and 1m+ city
+
+  - city: Tegucigalpa
+    country: Honduras
+    airport_codes: [TGU, XPL]
+    region: Central America
+    group: capital
+
+  - city: Managua
+    country: Nicaragua
+    airport_codes: [MGA]
+    region: Central America
+    group: capital
+
+  - city: Panama City
+    country: Panama
+    airport_codes: [PTY]
+    region: Central America
+    group: capital and large metro
+
+  # -------------------------
+  # ASEAN CAPITALS AND LARGE / MAJOR CITIES
+  # -------------------------
+
+  - city: Bandar Seri Begawan
+    country: Brunei
+    airport_codes: [BWN]
+    region: Southeast Asia
+    group: ASEAN capital
+
+  - city: Phnom Penh
+    country: Cambodia
+    airport_codes: [PNH]
+    region: Southeast Asia
+    group: ASEAN capital
+
+  - city: Siem Reap
+    country: Cambodia
+    airport_codes: [SAI]
+    region: Southeast Asia
+    group: major tourism city
+
+  - city: Jakarta
+    country: Indonesia
+    airport_codes: [CGK]
+    region: Southeast Asia
+    group: ASEAN capital and 1m+ city
+
+  - city: Surabaya
+    country: Indonesia
+    airport_codes: [SUB]
+    region: Southeast Asia
+    group: 1m+ city
+
+  - city: Bandung
+    country: Indonesia
+    airport_codes: [BDO]
+    region: Southeast Asia
+    group: 1m+ city
+
+  - city: Medan
+    country: Indonesia
+    airport_codes: [KNO]
+    region: Southeast Asia
+    group: 1m+ city
+
+  - city: Denpasar
+    country: Indonesia
+    airport_codes: [DPS]
+    region: Southeast Asia
+    group: major tourism city
+
+  - city: Yogyakarta
+    country: Indonesia
+    airport_codes: [YIA]
+    region: Southeast Asia
+    group: major tourism city
+
+  - city: Vientiane
+    country: Laos
+    airport_codes: [VTE]
+    region: Southeast Asia
+    group: ASEAN capital
+
+  - city: Luang Prabang
+    country: Laos
+    airport_codes: [LPQ]
+    region: Southeast Asia
+    group: major tourism city
+
+  - city: Kuala Lumpur
+    country: Malaysia
+    airport_codes: [KUL, SZB]
+    region: Southeast Asia
+    group: ASEAN capital and 1m+ city
+
+  - city: George Town
+    country: Malaysia
+    airport_codes: [PEN]
+    region: Southeast Asia
+    group: major city
+
+  - city: Johor Bahru
+    country: Malaysia
+    airport_codes: [JHB, SIN]
+    region: Southeast Asia
+    group: major city
+
+  - city: Naypyidaw
+    country: Myanmar
+    airport_codes: [NYT]
+    region: Southeast Asia
+    group: ASEAN capital
+
+  - city: Yangon
+    country: Myanmar
+    airport_codes: [RGN]
+    region: Southeast Asia
+    group: 1m+ city
+
+  - city: Mandalay
+    country: Myanmar
+    airport_codes: [MDL]
+    region: Southeast Asia
+    group: major city
+
+  - city: Manila
+    country: Philippines
+    airport_codes: [MNL]
+    region: Southeast Asia
+    group: ASEAN capital and 1m+ city
+
+  - city: Quezon City
+    country: Philippines
+    airport_codes: [MNL]
+    region: Southeast Asia
+    group: 1m+ city
+
+  - city: Cebu
+    country: Philippines
+    airport_codes: [CEB]
+    region: Southeast Asia
+    group: major city
+
+  - city: Davao
+    country: Philippines
+    airport_codes: [DVO]
+    region: Southeast Asia
+    group: 1m+ city
+
+  - city: Singapore
+    country: Singapore
+    airport_codes: [SIN]
+    region: Southeast Asia
+    group: ASEAN capital and 1m+ city
+
+  - city: Bangkok
+    country: Thailand
+    airport_codes: [BKK, DMK]
+    region: Southeast Asia
+    group: ASEAN capital and 1m+ city
+
+  - city: Chiang Mai
+    country: Thailand
+    airport_codes: [CNX]
+    region: Southeast Asia
+    group: major city
+
+  - city: Phuket
+    country: Thailand
+    airport_codes: [HKT]
+    region: Southeast Asia
+    group: major tourism city
+
+  - city: Dili
+    country: Timor-Leste
+    airport_codes: [DIL]
+    region: Southeast Asia
+    group: ASEAN capital
+
+  - city: Hanoi
+    country: Vietnam
+    airport_codes: [HAN]
+    region: Southeast Asia
+    group: ASEAN capital and 1m+ city
+
+  - city: Ho Chi Minh City
+    country: Vietnam
+    airport_codes: [SGN]
+    region: Southeast Asia
+    group: 1m+ city
+
+  - city: Da Nang
+    country: Vietnam
+    airport_codes: [DAD]
+    region: Southeast Asia
+    group: major city
+
+  # -------------------------
+  # JAPAN
+  # -------------------------
+
+  - city: Tokyo
+    country: Japan
+    airport_codes: [HND, NRT]
+    region: East Asia
+    group: capital and 1m+ city
+
+  - city: Yokohama
+    country: Japan
+    airport_codes: [HND, NRT]
+    region: East Asia
+    group: 1m+ city
+
+  - city: Osaka
+    country: Japan
+    airport_codes: [KIX, ITM]
+    region: East Asia
+    group: 1m+ city
+
+  - city: Nagoya
+    country: Japan
+    airport_codes: [NGO]
+    region: East Asia
+    group: 1m+ city
+
+  - city: Sapporo
+    country: Japan
+    airport_codes: [CTS]
+    region: East Asia
+    group: 1m+ city
+
+  - city: Fukuoka
+    country: Japan
+    airport_codes: [FUK]
+    region: East Asia
+    group: 1m+ city
+
+  - city: Kobe
+    country: Japan
+    airport_codes: [UKB, KIX]
+    region: East Asia
+    group: 1m+ city
+
+  - city: Kyoto
+    country: Japan
+    airport_codes: [KIX, ITM]
+    region: East Asia
+    group: major tourism city
+
+  - city: Kawasaki
+    country: Japan
+    airport_codes: [HND, NRT]
+    region: East Asia
+    group: 1m+ city
+
+  - city: Saitama
+    country: Japan
+    airport_codes: [HND, NRT]
+    region: East Asia
+    group: 1m+ city
+
+  - city: Hiroshima
+    country: Japan
+    airport_codes: [HIJ]
+    region: East Asia
+    group: major city
+
+  - city: Sendai
+    country: Japan
+    airport_codes: [SDJ]
+    region: East Asia
+    group: major city
+
+  # -------------------------
+  # SOUTH KOREA
+  # -------------------------
+
+  - city: Seoul
+    country: South Korea
+    airport_codes: [ICN, GMP]
+    region: East Asia
+    group: capital and 1m+ city
+
+  - city: Busan
+    country: South Korea
+    airport_codes: [PUS]
+    region: East Asia
+    group: 1m+ city
+
+  - city: Incheon
+    country: South Korea
+    airport_codes: [ICN]
+    region: East Asia
+    group: 1m+ city
+
+  - city: Daegu
+    country: South Korea
+    airport_codes: [TAE]
+    region: East Asia
+    group: 1m+ city
+
+  - city: Daejeon
+    country: South Korea
+    airport_codes: [CJJ]
+    region: East Asia
+    group: 1m+ city
+    notes: Cheongju may be the practical airport.
+
+  - city: Gwangju
+    country: South Korea
+    airport_codes: [KWJ]
+    region: East Asia
+    group: major city
+
+  - city: Jeju
+    country: South Korea
+    airport_codes: [CJU]
+    region: East Asia
+    group: major tourism city
+
+  # -------------------------
+  # SELECTED AFRICA
+  # -------------------------
+
+  - city: Cape Town
+    country: South Africa
+    airport_codes: [CPT]
+    region: Africa
+    group: selected Africa major city
+
+  - city: Johannesburg
+    country: South Africa
+    airport_codes: [JNB]
+    region: Africa
+    group: selected Africa major city
+
+  - city: Pretoria
+    country: South Africa
+    airport_codes: [JNB]
+    region: Africa
+    group: capital
+
+  - city: Durban
+    country: South Africa
+    airport_codes: [DUR]
+    region: Africa
+    group: selected Africa major city
+
+  - city: Nairobi
+    country: Kenya
+    airport_codes: [NBO]
+    region: Africa
+    group: capital and major city
+
+  - city: Mombasa
+    country: Kenya
+    airport_codes: [MBA]
+    region: Africa
+    group: major tourism city
+
+  - city: Windhoek
+    country: Namibia
+    airport_codes: [WDH]
+    region: Africa
+    group: capital
+
+  - city: Marrakech
+    country: Morocco
+    airport_codes: [RAK]
+    region: Africa
+    group: major tourism city
+
+  - city: Casablanca
+    country: Morocco
+    airport_codes: [CMN]
+    region: Africa
+    group: major city
+
+  - city: Rabat
+    country: Morocco
+    airport_codes: [RBA]
+    region: Africa
+    group: capital
+
+  - city: Fes
+    country: Morocco
+    airport_codes: [FEZ]
+    region: Africa
+    group: major tourism city
+
+  - city: Cairo
+    country: Egypt
+    airport_codes: [CAI]
+    region: Africa
+    group: capital and 1m+ city
+
+  - city: Alexandria
+    country: Egypt
+    airport_codes: [HBE]
+    region: Africa
+    group: 1m+ city
+
+  - city: Luxor
+    country: Egypt
+    airport_codes: [LXR]
+    region: Africa
+    group: major tourism city
+
+  - city: Aswan
+    country: Egypt
+    airport_codes: [ASW]
+    region: Africa
+    group: major tourism city

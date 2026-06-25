@@ -143,6 +143,25 @@ expedia_initial_check:
   decision: continue
   notes: "Expedia returned viable Lisbon lodging options. Next step is Tripadvisor validation for quality, location, and review-risk checks."
 
+tripadvisor_initial_check:
+  source: Tripadvisor connector
+  checked_at: 2026-06-25
+  destination: Lisbon, Portugal
+  check_in_date: 2026-10-05
+  check_out_date: 2026-10-16
+  travelers: 2 adults
+  rooms: 1
+  submitted_hotels:
+    - Hotel Gat Rossio
+    - VIP Executive Suites do Marques Hotel
+    - HF Fenix Music
+    - VIP Executive Picoas Hotel
+    - Chiado 44
+  result_status: no_matched_hotels_returned
+  validation_status: inconclusive
+  decision: retry_or_continue_with_missing_validation
+  notes: "Tripadvisor did not return matched hotel results for the Expedia candidate names. Do not reject hotels based on this alone. Retry with broader Lisbon-area search or mark Tripadvisor validation as missing."
+
 validation_rules:
   same_origin_required: true
   same_destination_required: true

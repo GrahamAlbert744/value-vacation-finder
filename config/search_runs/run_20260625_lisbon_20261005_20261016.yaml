@@ -88,6 +88,61 @@ skyscanner_initial_check:
   decision: continue
   notes: "Skyscanner returned viable nonstop BOS-LIS options. Price interpretation must be verified before scoring."
 
+expedia_initial_check:
+  source: Expedia connector
+  checked_at: 2026-06-25
+  destination: Lisbon, Portugal
+  check_in_date: 2026-10-05
+  check_out_date: 2026-10-16
+  travelers: 2 adults
+  rooms: 1
+  currency: USD
+  filters:
+    property_type: Hotel
+    guest_rating: Very good or better
+    amenities:
+      - WiFi
+      - Air conditioning
+  result_status: returned_viable_options
+  representative_value_candidates:
+    - hotel_name: Hotel Gat Rossio
+      star_rating: 2.0
+      guest_rating: 9.0
+      review_count: 1001
+      avg_nightly_price_usd: 151.00
+      total_price_usd: 1819.00
+      assessment: strong_value_candidate_pending_review_validation
+    - hotel_name: VIP Executive Suites do Marques Hotel
+      star_rating: 4.0
+      guest_rating: 9.4
+      review_count: 703
+      avg_nightly_price_usd: 167.00
+      total_price_usd: 2006.00
+      assessment: strong_value_candidate_pending_review_validation
+    - hotel_name: HF Fenix Music
+      star_rating: 3.0
+      guest_rating: 9.4
+      review_count: 1005
+      avg_nightly_price_usd: 147.00
+      total_price_usd: 1821.00
+      assessment: strong_value_candidate_pending_review_validation
+    - hotel_name: VIP Executive Picoas Hotel
+      star_rating: 4.0
+      guest_rating: 9.4
+      review_count: 1118
+      avg_nightly_price_usd: 151.00
+      total_price_usd: 1825.00
+      assessment: strong_value_candidate_pending_review_validation
+    - hotel_name: Chiado 44
+      star_rating: 3.0
+      guest_rating: 9.2
+      review_count: 458
+      avg_nightly_price_usd: 190.00
+      total_price_usd: 2279.00
+      assessment: good_candidate_pending_review_validation
+  decision: continue
+  notes: "Expedia returned viable Lisbon lodging options. Next step is Tripadvisor validation for quality, location, and review-risk checks."
+
 validation_rules:
   same_origin_required: true
   same_destination_required: true

@@ -1,0 +1,110 @@
+# Search run template for Value Vacation Finder
+# Copy this file or edit it when starting a new manual vacation search.
+# Each search run should represent one destination and one date range.
+
+search_run:
+  search_run_id: run_YYYYMMDD_destination_YYYYMMDD_YYYYMMDD
+  status: template
+  created_at: null
+  notes: "Template for a single manual vacation search run."
+
+origin:
+  city: Boston
+  airport_code: BOS
+  country: United States
+
+destination:
+  city: Lisbon
+  country: Portugal
+  primary_airport_code: LIS
+  region: Europe
+  destination_group: EU capital
+
+dates:
+  departure_date: 2026-10-05
+  return_date: 2026-10-16
+  trip_length_days: 11
+  min_allowed_days: 7
+  max_allowed_days: 21
+
+travelers:
+  adults: 2
+  children: 0
+  traveler_context:
+    - name: Graham
+      residency: USA
+      citizenship: Canada
+      passport_country: Canada
+    - name: Anjali
+      residency: USA
+      citizenship: USA
+      passport_country: USA
+
+preferences:
+  currency: USD
+  locale: en-US
+  cabin_class: economy
+  rooms: 1
+  avoid_basic_economy: true
+  prefer_reasonable_flight_duration: true
+  hotel_review_minimum: 4.0
+  prefer_free_cancellation: true
+  manual_run_only: true
+
+source_order:
+  - travel_advisory
+  - skyscanner
+  - expedia
+  - tripadvisor
+  - viator
+
+source_tasks:
+  travel_advisory:
+    enabled: true
+    purpose: "Check whether the destination is safe enough to continue."
+    raw_output_folder: data/raw/travel_advisory
+
+  skyscanner:
+    enabled: true
+    purpose: "Find round-trip flight options from BOS to the destination."
+    raw_output_folder: data/raw/skyscanner
+
+  expedia:
+    enabled: true
+    purpose: "Find lodging prices for the same destination and date range."
+    raw_output_folder: data/raw/expedia
+
+  tripadvisor:
+    enabled: true
+    purpose: "Validate lodging quality and review signals."
+    raw_output_folder: data/raw/tripadvisor
+
+  viator:
+    enabled: true
+    purpose: "Estimate attractions, tours, and activity value."
+    raw_output_folder: data/raw/viator
+
+validation_rules:
+  same_origin_required: true
+  same_destination_required: true
+  same_date_range_required: true
+  same_traveler_count_required: true
+  trip_length_must_be_7_to_21_days: true
+  travel_advisory_check_required_first: true
+  reject_level_4_advisory: true
+  flag_level_3_advisory: true
+
+raw_file_naming:
+  pattern: search_run_id_source_destination_startdate_enddate.md
+  examples:
+    travel_advisory: run_20260624_lisbon_20261005_20261016_travel_advisory_lisbon.md
+    skyscanner: run_20260624_lisbon_20261005_20261016_skyscanner_lisbon.md
+    expedia: run_20260624_lisbon_20261005_20261016_expedia_lisbon.md
+    tripadvisor: run_20260624_lisbon_20261005_20261016_tripadvisor_lisbon.md
+    viator: run_20260624_lisbon_20261005_20261016_viator_lisbon.md
+
+git_safety:
+  commit_raw_connector_outputs: false
+  commit_mock_or_sample_data_only: true
+  never_commit_env_files: true
+  never_commit_api_keys: true

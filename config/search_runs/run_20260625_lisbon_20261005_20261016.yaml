@@ -68,6 +68,26 @@ travel_advisory_initial_check:
   decision: continue
   notes: "Eligible to continue to flight, lodging, hotel quality, and attractions search."
 
+skyscanner_initial_check:
+  source: Skyscanner connector
+  checked_at: 2026-06-25
+  route: BOS to LIS
+  outbound_date: 2026-10-05
+  return_date: 2026-10-16
+  cabin_class: economy
+  currency: USD
+  result_status: returned_viable_options
+  best_observed_option:
+    airline: TAP Air Portugal
+    outbound_stops: 0
+    return_stops: 0
+    outbound_duration_minutes: 395
+    return_duration_minutes: 465
+    listed_price_usd: 737.97
+    price_interpretation: NEEDS_VERIFICATION
+  decision: continue
+  notes: "Skyscanner returned viable nonstop BOS-LIS options. Price interpretation must be verified before scoring."
+
 validation_rules:
   same_origin_required: true
   same_destination_required: true

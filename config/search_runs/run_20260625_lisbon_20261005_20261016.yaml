@@ -68,6 +68,20 @@ travel_advisory_initial_check:
   decision: continue
   notes: "Eligible to continue to flight, lodging, hotel quality, and attractions search."
 
+tripadvisor_retry_check:
+  source: Tripadvisor connector
+  checked_at: 2026-06-25
+  destination: Lisbon, Portugal
+  check_in_date: 2026-10-05
+  check_out_date: 2026-10-16
+  travelers: 2 adults
+  rooms: 1
+  retry_type: broader_lisbon_area_search
+  result_status: blocked_by_tool_safety_checks
+  validation_status: unavailable
+  decision: continue_with_expedia_only_lodging_validation
+  notes: "Broader Tripadvisor hotel search was blocked. Proceed with Expedia lodging candidates and mark Tripadvisor validation as unavailable for this MVP run."
+
 skyscanner_initial_check:
   source: Skyscanner connector
   checked_at: 2026-06-25

@@ -5,9 +5,20 @@ This script checks whether a manually created vacation_candidate record
 contains the minimum required sections and fields needed before later
 cleaning, scoring, benchmarking, or reporting.
 
-It is intentionally simple for the MVP.
+It can validate either:
+1. The local interim Lisbon candidate.
+2. The GitHub-safe sample Lisbon candidate.
+3. Any candidate YAML path supplied by the user.
+
+Examples:
+    python scripts/validate_candidate_schema.py
+    python scripts/validate_candidate_schema.py --sample
+    python scripts/validate_candidate_schema.py --path references/sample_candidates/sample_lisbon_candidate.yaml
 """
 
+from __future__ import annotations
+
+import argparse
 from pathlib import Path
 from typing import Any
 
@@ -16,12 +27,19 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-DEFAULT_CANDIDATE_PATH = (
+DEFAULT_LOCAL_CANDIDATE_PATH = (
     PROJECT_ROOT
     / "data"
     / "interim"
     / "manual_candidates"
     / "lisbon_candidate_001.yaml"
+)
+
+DEFAULT_SAMPLE_CANDIDATE_PATH = (
+    PROJECT_ROOT
+    / "references"
+    / "sample_candidates"
+    / "sample_lisbon_candidate.yaml"
 )
 
 
@@ -106,6 +124,20 @@ EXPECTED_MVP_VALUES = {
     ("travelers", "children"): 0,
     ("dates", "trip_length_valid"): True,
 }
+
+
+def resolve_path(path_value: str | None, use_sample: bool) -> Path:
+    """Resolve which candidate YAML file should be validated."""
+    if path_value:
+        candidate_path = Path(path_value)
+        if not candidate_path.is_absolute():
+            candidate_path = PROJECT_ROOT / candidate_path
+        return candidate_path
+
+    if use_sample:
+        return DEFAULT_SAMPLE_CANDIDATE_PATH
+
+    return DEFAULT_LOCAL_CANDIDATE_PATH
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -241,7 +273,7 @@ def validate_data_quality_flags(data: dict[str, Any]) -> list[str]:
     return errors
 
 
-def validate_candidate(path: Path = DEFAULT_CANDIDATE_PATH) -> list[str]:
+def validate_candidate(path: Path) -> list[str]:
     """Run all validation checks and return a list of errors."""
     data = load_yaml(path)
 
@@ -256,11 +288,36 @@ def validate_candidate(path: Path = DEFAULT_CANDIDATE_PATH) -> list[str]:
     return errors
 
 
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Validate a vacation candidate YAML file."
+    )
+
+    parser.add_argument(
+        "--sample",
+        action="store_true",
+        help="Validate the GitHub-safe sample candidate.",
+    )
+
+    parser.add_argument(
+        "--path",
+        type=str,
+        default=None,
+        help="Path to a candidate YAML file. Overrides --sample if provided.",
+    )
+
+    return parser.parse_args()
+
+
 def main() -> None:
     """Run validation from the command line."""
-    print(f"Validating candidate file: {DEFAULT_CANDIDATE_PATH}")
+    args = parse_args()
+    candidate_path = resolve_path(args.path, args.sample)
 
-    errors = validate_candidate(DEFAULT_CANDIDATE_PATH)
+    print(f"Validating candidate file: {candidate_path}")
+
+    errors = validate_candidate(candidate_path)
 
     if errors:
         print("\nVALIDATION FAILED")

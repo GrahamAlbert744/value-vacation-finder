@@ -1,0 +1,254 @@
+# Scoring weights for Value Vacation Finder
+# Phase 6.1
+#
+# Purpose:
+# Define the first draft scoring framework for vacation candidates.
+#
+# Important:
+# A candidate should NOT be called "undervalued" until benchmark/fair-value
+# logic is implemented. Until then, scoring can only be draft/preliminary.
+
+scoring_system:
+  name: value_vacation_score
+  version: 0.1
+  total_points: 100
+  status: draft_pre_benchmark
+  scoring_allowed_before_benchmark: false
+  notes: >
+    This scoring configuration defines the planned scoring categories.
+    Final scoring should not be used for real recommendations until
+    fair-value benchmarking is implemented.
+
+categories:
+  price_undervaluation:
+    points: 30
+    status: not_ready
+    requires_benchmark: true
+    description: >
+      Measures whether the total estimated trip cost is below a fair-value
+      estimate for comparable trips.
+    inputs_required:
+      - actual_estimated_trip_cost_usd
+      - fair_value_estimate_usd
+      - estimated_discount_pct
+      - benchmark_method
+    scoring_bands:
+      exceptional:
+        discount_pct_min: 0.30
+        points: 30
+      strong:
+        discount_pct_min: 0.20
+        discount_pct_max: 0.2999
+        points: 25
+      good:
+        discount_pct_min: 0.10
+        discount_pct_max: 0.1999
+        points: 20
+      modest:
+        discount_pct_min: 0.05
+        discount_pct_max: 0.0999
+        points: 15
+      fair_value:
+        discount_pct_min: -0.0499
+        discount_pct_max: 0.0499
+        points: 10
+      slightly_overpriced:
+        discount_pct_min: -0.1499
+        discount_pct_max: -0.05
+        points: 5
+      materially_overpriced:
+        discount_pct_max: -0.15
+        points: 0
+
+  flight_quality_value:
+    points: 15
+    status: draft
+    requires_benchmark: false
+    description: >
+      Scores flight practicality and value. Cheapest flight is not always best.
+    inputs_required:
+      - estimated_total_flight_cost_usd
+      - outbound_stops
+      - return_stops
+      - outbound_duration_minutes
+      - return_duration_minutes
+      - flight_price_interpretation
+      - assumed_price_basis_for_mvp
+    scoring_factors:
+      price_reasonableness: 5
+      stop_count: 4
+      duration_reasonableness: 3
+      fare_quality_or_basic_economy_risk: 2
+      schedule_practicality: 1
+    caveats:
+      - flight_price_interpretation_needs_verification
+
+  lodging_quality_value:
+    points: 20
+    status: draft
+    requires_benchmark: false
+    description: >
+      Scores lodging quality, review strength, price, and practical usability.
+    inputs_required:
+      - hotel_name
+      - hotel_total_price_usd
+      - hotel_nightly_price_usd
+      - hotel_guest_rating
+      - hotel_review_count
+      - lodging_validation_source
+      - tripadvisor_validation_status
+      - hotel_cancellation_policy_status
+      - hotel_location_quality_status
+    scoring_factors:
+      price_reasonableness: 5
+      guest_rating: 4
+      review_count_strength: 3
+      location_quality: 3
+      cancellation_policy: 2
+      independent_validation: 2
+      amenities_and_room_quality: 1
+    caveats:
+      - tripadvisor_validation_unavailable
+      - hotel_cancellation_policy_missing
+      - hotel_location_quality_missing
+      - expedia_inventory_only
+
+  destination_attractiveness:
+    points: 10
+    status: draft
+    requires_benchmark: false
+    description: >
+      Scores whether the destination is attractive for the given season,
+      trip length, and traveler preferences.
+    inputs_required:
+      - destination_city
+      - destination_country
+      - destination_region
+      - departure_date
+      - return_date
+      - trip_length_days
+    scoring_factors:
+      seasonality_and_weather: 3
+      cultural_food_historical_interest: 3
+      ease_of_getting_around: 2
+      fit_for_trip_length: 1
+      uniqueness_or_personal_interest: 1
+
+  attractions_activity_value:
+    points: 10
+    status: not_ready
+    requires_source_validation: true
+    description: >
+      Scores activity richness, quality, and cost. Placeholder budgets are
+      allowed for MVP testing but should not receive final activity scores.
+    inputs_required:
+      - attractions_source
+      - estimated_attraction_cost_total_usd
+      - viator_validation_status
+      - activity_budget_method
+    scoring_factors:
+      quantity_of_good_options: 3
+      review_quality: 2
+      cost_reasonableness: 2
+      date_availability: 2
+      variety: 1
+    caveats:
+      - viator_validation_unavailable
+      - activity_budget_placeholder_used
+
+  safety_travel_advisory_risk:
+    points: 10
+    status: draft
+    requires_advisory_check: true
+    description: >
+      Scores destination risk and enforces hard safety rejection rules.
+    inputs_required:
+      - risk_source
+      - advisory_country
+      - us_travel_advisory_level
+      - us_travel_advisory_label
+      - advisory_decision
+      - risk_flag
+    scoring_bands:
+      level_1_normal_precautions:
+        points: 10
+      level_2_increased_caution:
+        points: 7
+      level_3_reconsider_travel:
+        points: 2
+        normally_reject: true
+      level_4_do_not_travel:
+        points: 0
+        automatic_reject: true
+    future_inputs_needed:
+      - canada_travel_advisory_level
+      - canada_travel_advisory_label
+      - regional_conflict_risk
+      - health_or_disaster_alerts
+
+  practicality_friction:
+    points: 5
+    status: draft
+    requires_entry_requirements: true
+    description: >
+      Scores travel friction, including visa, passport, logistics, and
+      feasibility for both travelers.
+    inputs_required:
+      - visa_entry_status
+      - passport_requirement_status
+      - traveler_citizenship_context
+      - language_or_logistics_notes
+    scoring_factors:
+      visa_feasibility: 2
+      passport_feasibility: 1
+      airport_transfer_or_local_transport: 1
+      general_logistics: 1
+    future_inputs_needed:
+      - visa_required_graham
+      - visa_required_anjali
+      - passport_validity_requirement
+      - canada_entry_requirement_check
+      - us_entry_requirement_check
+
+hard_rejection_rules:
+  reject_if:
+    - advisory_level_4
+    - active_conflict_risk_high
+    - destination_or_date_mismatch
+    - trip_length_outside_7_to_21_days
+    - traveler_count_mismatch
+    - flight_itinerary_unreasonable
+    - lodging_quality_clearly_poor
+    - entry_requirements_infeasible
+    - total_cost_not_below_benchmark_after_benchmarking_exists
+
+recommendation_tiers:
+  exceptional_value:
+    min_score: 90
+    max_score: 100
+    label: Exceptional value
+  strong_candidate:
+    min_score: 80
+    max_score: 89.99
+    label: Strong candidate
+  worth_considering:
+    min_score: 70
+    max_score: 79.99
+    label: Worth considering
+  only_if_personally_exciting:
+    min_score: 60
+    max_score: 69.99
+    label: Only if destination is personally exciting
+  reject:
+    min_score: 0
+    max_score: 59.99
+    label: Reject
+
+mvp_scoring_policy:
+  allow_draft_component_scores: true
+  allow_final_total_score: false
+  allow_undervalued_label: false
+  reason: >
+    Benchmarking and fair-value estimation are not built yet.
+    The project may calculate draft component scores for testing,
+    but should not produce final rankings or undervalued labels.

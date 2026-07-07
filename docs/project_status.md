@@ -6,7 +6,14 @@ Value Vacation Finder
 
 ## Current Phase
 
-Phase 1 — Project configuration and documentation
+Phase 6 — Draft scoring and scoring-readiness tooling
+
+> Note: this document previously said "Phase 1" while the project had
+> already progressed through candidate construction, processed-CSV tooling,
+> and draft scoring. Updated 2026-07-07 during a full project audit to
+> reflect actual repo state. See `docs/known_limitations.md` for the
+> matching "completed / not yet completed" list and
+> `references/project_full_instructions.md` for the full operating policy.
 
 ## Project Goal
 
@@ -195,119 +202,103 @@ Documents what the project cannot do yet, including limitations around connector
 
 ---
 
-## Current Step
-
-### Phase 1.9 — Project status and phase checklist
-
-Status: In progress
-
-File:
-
-`docs/project_status.md`
-
-Purpose:
-
-Records the current state of the project so the next session can resume cleanly.
-
----
-
-## Upcoming Phases
+## Completed Phases (continued)
 
 ### Phase 2 — Search run setup
 
-Goal:
+Status: Complete
 
-Create a specific manual search run using one destination and one date range.
-
-Planned files:
+Files:
 
 - `config/search_run_template.yaml`
-- `data/raw/search_runs/`
+- `config/search_runs/run_20260625_lisbon_20261005_20261016.yaml`
 - `docs/search_run_protocol.md`
 
-Example search run:
-
-- Destination: Lisbon, Portugal
-- Origin: BOS
-- Departure date: 2026-10-05
-- Return date: 2026-10-16
-- Travelers: 2 adults
+First search run: Lisbon, Portugal, BOS origin, 2026-10-05 to 2026-10-16, 2 adults.
 
 ---
 
 ### Phase 3 — Manual connector data collection
 
-Goal:
+Status: Complete for the Lisbon run
 
-Use connectors in the correct order:
-
-1. Travel Advisory
-2. Skyscanner
-3. Expedia
-4. Tripadvisor
-5. Viator
-
-Output:
-
-Raw markdown or structured notes saved under:
-
-- `data/raw/travel_advisory/`
-- `data/raw/skyscanner/`
-- `data/raw/expedia/`
-- `data/raw/tripadvisor/`
-- `data/raw/viator/`
-
-Important:
-
-Raw travel data should not be committed to GitHub unless it is mock/sample data.
+Raw notes captured under `data/raw/{travel_advisory,skyscanner,expedia,tripadvisor,viator}/`.
+Tripadvisor's broader hotel search was blocked (proceeded with Expedia-only
+lodging validation); Viator was blocked (proceeded with a placeholder
+activity budget). Both limitations are recorded in the search run config.
 
 ---
 
 ### Phase 4 — Raw data review
 
-Goal:
+Status: Complete
 
-Check whether all connector outputs match the same destination, dates, traveler count, and currency.
-
----
-
-### Phase 5 — Cleaning modules
-
-Goal:
-
-Build Python modules to convert raw connector outputs into standardized interim tables.
+File: `docs/raw_data_review_summary_lisbon.md` (checklist in `docs/raw_data_review_checklist.md`).
 
 ---
 
-### Phase 6 — Matching logic
+### Phase 5 — Candidate construction and processed CSV tooling
 
-Goal:
+Status: Complete
 
-Build valid vacation candidates only when flight, lodging, attractions, and advisory data match correctly.
+Files:
+
+- Candidate schema + sample candidate: `references/sample_candidates/sample_lisbon_candidate.yaml`
+- `scripts/validate_candidate_schema.py`
+- `scripts/flatten_candidate_to_row.py`
+- `scripts/build_processed_candidate_csv.py`
+- `scripts/check_processed_candidate_csv.py`
+- Sample processed output: `references/sample_processed/vacation_candidates_sample.csv`
 
 ---
+
+### Phase 6 — Scoring configuration and draft scoring
+
+Status: Complete (draft-only, as intended)
+
+Files:
+
+- `config/scoring_weights.yaml`
+- `scripts/validate_scoring_config.py`
+- `scripts/check_scoring_readiness.py`
+- `scripts/draft_component_scoring.py`
+
+Final total score, recommendation tier, and undervalued label remain
+intentionally blocked until benchmarking exists.
+
+---
+
+## Current Step
 
 ### Phase 7 — Benchmarking
 
-Goal:
+Status: Not started (scaffolding only)
 
-Estimate fair trip value and calculate whether the trip appears undervalued.
+`src/value_vacation_finder/benchmarking/fair_value.py` defines the
+`not_yet_built` status constant and raises `NotImplementedError` for
+`estimate_fair_value()`/`calculate_discount_pct()` so callers get an
+explicit block rather than a fabricated number. Real benchmarking requires
+comparable price data that has not been captured yet.
 
 ---
+
+## Upcoming Phases
 
 ### Phase 8 — Risk filtering
 
 Goal:
 
-Reject or flag trips with serious travel advisory, conflict, safety, or entry-risk issues.
+Reject or flag trips with serious travel advisory, conflict, safety, or
+entry-risk issues. Requires Canadian travel advisory integration and
+passport/visa rules (see `config/entry_requirements_template.yaml`).
 
 ---
 
-### Phase 9 — Scoring
+### Phase 9 — Final scoring
 
 Goal:
 
-Score valid vacation candidates using the 100-point scoring model.
+Unblock final total score once benchmarking and risk filtering exist.
 
 ---
 
@@ -315,14 +306,13 @@ Score valid vacation candidates using the 100-point scoring model.
 
 Goal:
 
-Generate a ranked vacation shortlist as CSV and markdown.
+Generate a ranked vacation shortlist as CSV and markdown, backed by a
+run manifest (`scripts/build_run_manifest.py`, `data/run_manifests/`).
 
 ---
 
 ## Next Immediate Step
 
-After Phase 1.9 is committed, begin:
-
-`Phase 2.1 — Create search_run_template.yaml`
-
-This will define the first actual manual vacation search.
+Capture real comparable-price benchmark data for the Lisbon run (or a
+newly defined run) so Phase 7 can move from scaffolding to a real
+`fair_value_estimate_usd`.

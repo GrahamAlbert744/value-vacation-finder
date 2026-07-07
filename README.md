@@ -74,5 +74,11 @@ Can we find safe, attractive, high-quality vacations where the combined cost of 
 
 
 
-Phase 0: project scaffold and GitHub setup.
+Phase 6: draft scoring and scoring-readiness tooling complete. Benchmarking,
+
+Canadian travel advisory integration, passport/visa rules, and final
+
+scoring/ranking are not yet built — see `docs/project_status.md` and
+
+`references/project_full_instructions.md` for the full picture.
 

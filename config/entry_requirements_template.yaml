@@ -1,0 +1,51 @@
+# Entry requirements template for Value Vacation Finder
+#
+# Section 10 of references/project_full_instructions.md requires every
+# destination to eventually check U.S. and Canadian travel advisories plus
+# passport/visa/vaccination entry rules for both travelers.
+#
+# This is a template, not data. All values are null until a real, dated
+# lookup is performed for a specific search_run_id during a live manual
+# run. Do not fill these in from assumption or general knowledge — record
+# the source and date for every field.
+#
+# Copy this file to a per-run location (e.g. alongside the search run
+# config) and fill it in once real advisory/entry data has been captured.
+
+entry_requirements:
+  search_run_id: null
+  destination_country: null
+  checked_at: null
+
+  advisory:
+    us_travel_advisory:
+      level: null
+      label: null
+      source: null
+      checked_at: null
+    canada_travel_advisory:
+      level: null
+      label: null
+      source: null
+      checked_at: null
+
+  entry_rules:
+    canadian_passport_holder:
+      # traveler_1 in config/traveler_profile.yaml
+      visa_required: null
+      passport_validity_requirement: null
+      vaccination_requirement: null
+      notes: null
+    us_passport_holder:
+      # traveler_2 in config/traveler_profile.yaml
+      visa_required: null
+      passport_validity_requirement: null
+      vaccination_requirement: null
+      notes: null
+
+  regional_conflict_or_security_alerts: null
+
+  decision:
+    risk_level_decision: null # eligible | eligible_with_caution | manual_review_or_reject | automatic_reject
+    entry_feasible: null
+    notes: null

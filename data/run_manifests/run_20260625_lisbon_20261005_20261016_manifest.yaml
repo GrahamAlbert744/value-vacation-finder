@@ -1,0 +1,82 @@
+run_id: run_20260625_lisbon_20261005_20261016
+run_date: '2026-07-07'
+run_mode: sample
+workflow: value_vacation_finder_mvp
+environment:
+  python_version: 3.11.15
+  conda_environment: value-vacation-finder
+  git_branch: main
+  git_commit: 92f1bd570b7650a058c6e85188aacb303d7024ab
+  run_timestamp: '2026-07-07T20:44:04.859820+00:00'
+connector_capture:
+  search_run_config:
+    path: config/search_runs/run_20260625_lisbon_20261005_20261016.yaml
+    exists: true
+    size_bytes: 7296
+    sha256: fc72d2ad0ac6f3ad84391b70fc575abc4634551828cca5402c546f6352d25786
+raw_inputs:
+  travel_advisory:
+    path: data/raw/travel_advisory/run_20260625_lisbon_20261005_20261016_travel_advisory_lisbon.md
+    exists: true
+    size_bytes: 879
+    sha256: e51bcb64f1a810abd3df2fba3613b9a5f1babe623616cd44ca77582594bbcbea
+  skyscanner:
+    path: data/raw/skyscanner/run_20260625_lisbon_20261005_20261016_skyscanner_lisbon.md
+    exists: true
+    size_bytes: 3763
+    sha256: fe77e4293ed3a04c8d7056ee151a165b11fc0a65d80fdae453a3cf1c56bb6266
+  expedia:
+    path: data/raw/expedia/run_20260625_lisbon_20261005_20261016_expedia_lisbon.md
+    exists: true
+    size_bytes: 3978
+    sha256: 54008ab2fbe6d0810b5a93ce71098abc7bdb7345459f82c421cf904bb823b3b1
+  tripadvisor:
+    path: data/raw/tripadvisor/run_20260625_lisbon_20261005_20261016_tripadvisor_lisbon.md
+    exists: true
+    size_bytes: 2693
+    sha256: 00d2d01ee8b1ce63a2a3bd6f1f4d35c622f4e179673e3514432229d0a5bb2e1c
+  viator:
+    path: data/raw/viator/run_20260625_lisbon_20261005_20261016_viator_lisbon.md
+    exists: true
+    size_bytes: 1717
+    sha256: 9b20f97af73f24f19fc5bd8e0be6cb64c3181cf8f59a6dd4314b1166a373e2a0
+transformed_inputs:
+  manual_candidates:
+  - path: data/interim/manual_candidates/lisbon_candidate_001.yaml
+    exists: true
+    size_bytes: 3931
+    sha256: f1c44c148084331e1a6de95cda5ed573ff0f298eb7291954da68bb14cf02cd84
+  sample_candidate:
+    path: references/sample_candidates/sample_lisbon_candidate.yaml
+    exists: true
+    size_bytes: 3825
+    sha256: 912221b65db2ee3fb1118d0e4dad76e9fa381c58861ab83a4b66b7c6c65eedd2
+processed_outputs:
+  sample_processed_csv:
+    path: references/sample_processed/vacation_candidates_sample.csv
+    exists: true
+    size_bytes: 2645
+    sha256: 41ddb513ad729ee4e5ff068e61561020341830a0f7926b208fc3542dd876a11d
+  real_processed_csv:
+    path: data/processed/vacation_candidates/vacation_candidates.csv
+    exists: false
+    size_bytes: null
+    sha256: null
+scoring_outputs:
+  scoring_weights_config:
+    path: config/scoring_weights.yaml
+    exists: true
+    size_bytes: 7503
+    sha256: c9ba8c4985561308558982596720ab91a6e09088cffa10432b2e6097e71816fa
+benchmark_outputs:
+  fair_value_estimate_usd: null
+  benchmark_method: not_yet_built
+reports:
+  final_shortlist_report: null
+parameters:
+  destination_slug: lisbon
+known_limitations:
+- Benchmark/fair-value logic is not implemented.
+- Canadian travel advisory integration is not implemented.
+- Passport/visa rules are not implemented.
+- Viator activity source validation is unavailable for this run.

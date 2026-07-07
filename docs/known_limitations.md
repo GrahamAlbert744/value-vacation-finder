@@ -26,7 +26,7 @@ Current stage:
 
 
 
-`Phase 1 — Project configuration and documentation`
+`Phase 6 — Draft scoring and scoring-readiness tooling`
 
 
 
@@ -34,9 +34,7 @@ Completed so far:
 
 
 
-\- Project scaffold
-
-\- GitHub setup
+\- Project scaffold and GitHub setup
 
 \- Traveler profile
 
@@ -46,11 +44,29 @@ Completed so far:
 
 \- Source configuration
 
-\- Data dictionary skeleton
-
 \- Manual workflow document
 
 \- Connector prompt library
+
+\- First Lisbon search run (Travel Advisory, Skyscanner, Expedia captured; Tripadvisor and Viator limitations recorded with placeholder budget)
+
+\- Raw data review
+
+\- Candidate schema and sample Lisbon candidate
+
+\- Candidate validation script
+
+\- Candidate flattening script
+
+\- Processed candidate CSV builder and checker
+
+\- Scoring weights configuration
+
+\- Scoring config validator
+
+\- Scoring readiness check
+
+\- Draft component scoring skeleton (final score, tier, and undervalued label remain blocked)
 
 
 
@@ -58,21 +74,19 @@ Not yet completed:
 
 
 
-\- Live connector data collection
+\- Real processed dataset writer (beyond the sample/reference candidate)
 
-\- Raw data storage examples
+\- Benchmark/fair-value logic
 
-\- Data cleaning modules
+\- Canadian travel advisory integration
 
-\- Matching logic
+\- Passport/visa rules
 
-\- Benchmarking logic
+\- Activity source validation (Viator)
 
-\- Risk filtering code
+\- Final scoring, ranking, and shortlist report
 
-\- Scoring code
-
-\- Final shortlist reports
+\- Run manifest system
 
 
 
@@ -259,6 +273,16 @@ However, the project does not yet automatically validate visa, passport, vaccina
 
 
 These must be manually reviewed before any real booking decision.
+
+
+
+A template for recording this per search run exists at
+
+`config/entry_requirements_template.yaml`. It is a schema, not data — every
+
+field is `null` until a real, dated U.S./Canadian advisory and entry-rule
+
+lookup is performed for a specific run.
 
 
 

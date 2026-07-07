@@ -82,6 +82,30 @@ tripadvisor_retry_check:
   decision: continue_with_expedia_only_lodging_validation
   notes: "Broader Tripadvisor hotel search was blocked. Proceed with Expedia lodging candidates and mark Tripadvisor validation as unavailable for this MVP run."
 
+viator_initial_check:
+  source: Viator connector
+  checked_at: 2026-06-25
+  destination: Lisbon, Portugal
+  start_date: 2026-10-05
+  end_date: 2026-10-16
+  travelers: 2 adults
+  currency: USD
+  search_intent:
+    - food tours
+    - historical tours
+    - cultural experiences
+    - day trips
+    - museums
+    - major attractions
+  result_status: blocked_by_tool_safety_checks
+  validation_status: unavailable
+  placeholder_activity_budget:
+    estimated_attraction_cost_per_person_usd: 200.00
+    estimated_attraction_cost_total_usd: 400.00
+    placeholder_reason: "Viator connector was blocked, so MVP uses a conservative placeholder activity budget."
+  decision: continue_with_placeholder_activity_budget
+  notes: "Viator attractions search was blocked. Proceed with placeholder activity cost and mark attractions validation as unavailable."
+
 skyscanner_initial_check:
   source: Skyscanner connector
   checked_at: 2026-06-25

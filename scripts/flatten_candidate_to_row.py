@@ -176,6 +176,7 @@ def flatten_candidate(data: dict[str, Any]) -> dict[str, Any]:
         "fair_value_estimate_usd": get_nested(data, "benchmark", "fair_value_estimate_usd"),
         "estimated_discount_pct": get_nested(data, "benchmark", "estimated_discount_pct"),
         "benchmark_method": get_nested(data, "benchmark", "benchmark_method"),
+        "benchmark_confidence": get_nested(data, "benchmark", "benchmark_confidence"),
         "undervalued_flag": get_nested(data, "benchmark", "undervalued_flag"),
 
         # Candidate decision
@@ -197,6 +198,9 @@ def flatten_candidate(data: dict[str, Any]) -> dict[str, Any]:
         ),
         "has_missing_benchmark": has_flag(
             data, "fair_value_estimate_missing"
+        ),
+        "has_low_confidence_benchmark": has_flag(
+            data, "benchmark_confidence_low"
         ),
     }
 

@@ -26,7 +26,7 @@ Current stage:
 
 
 
-`Phase 6 — Draft scoring and scoring-readiness tooling`
+`Phase 7 — Benchmarking (first real, low-confidence pass complete)`
 
 
 
@@ -58,7 +58,7 @@ Completed so far:
 
 \- Candidate flattening script
 
-\- Processed candidate CSV builder and checker
+\- Processed candidate CSV builder and checker (both sample and real outputs)
 
 \- Scoring weights configuration
 
@@ -66,7 +66,11 @@ Completed so far:
 
 \- Scoring readiness check
 
-\- Draft component scoring skeleton (final score, tier, and undervalued label remain blocked)
+\- Draft component scoring (price_undervaluation now scores for real once a benchmark exists; final score/tier/undervalued label remain blocked)
+
+\- Run manifest system (file hashes, environment metadata)
+
+\- First real fair-value benchmark for the Lisbon run (bottom-up component method, low confidence — see data/raw/benchmark_prices/)
 
 
 
@@ -74,13 +78,13 @@ Not yet completed:
 
 
 
-\- Real processed dataset writer (beyond the sample/reference candidate)
+\- Real processed dataset writer for destinations beyond Lisbon
 
-\- Benchmark/fair-value logic
+\- Raising benchmark confidence above "low" (needs a live, date-matched flight/hotel quote)
 
 \- Canadian travel advisory integration
 
-\- Passport/visa rules
+\- Passport/visa rules (template exists at config/entry_requirements_template.yaml, unfilled)
 
 \- Activity source validation (Viator)
 

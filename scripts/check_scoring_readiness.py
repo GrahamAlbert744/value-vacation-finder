@@ -11,6 +11,7 @@ It does not call any travel connectors.
 
 from __future__ import annotations
 
+import argparse
 import csv
 from pathlib import Path
 from typing import Any
@@ -82,6 +83,7 @@ def check_price_undervaluation(row: dict[str, Any]) -> dict[str, Any]:
         "fair_value_estimate_usd",
         "estimated_discount_pct",
         "benchmark_method",
+        "benchmark_confidence",
         "undervalued_flag",
     ]
 
@@ -93,10 +95,24 @@ def check_price_undervaluation(row: dict[str, Any]) -> dict[str, Any]:
     if row.get("benchmark_method") == "not_yet_built":
         missing.append("benchmark_method is not_yet_built")
 
+    if missing:
+        return {
+            "component": "price_undervaluation",
+            "status": "not_ready",
+            "reason": "; ".join(missing),
+        }
+
+    if has_flag(row, "benchmark_confidence_low") or row.get("benchmark_confidence") == "low":
+        return {
+            "component": "price_undervaluation",
+            "status": "draft_ready_with_caveats",
+            "reason": "benchmark_confidence is low; treat discount estimate as directional only.",
+        }
+
     return {
         "component": "price_undervaluation",
-        "status": "not_ready" if missing else "ready",
-        "reason": "; ".join(missing) if missing else "Benchmark fields exist.",
+        "status": "ready",
+        "reason": "Benchmark fields exist with medium/high confidence.",
     }
 
 
@@ -320,11 +336,33 @@ def check_scoring_readiness(row: dict[str, Any]) -> list[dict[str, Any]]:
     ]
 
 
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Check scoring readiness for a processed-style vacation candidate CSV."
+    )
+
+    parser.add_argument(
+        "--path",
+        type=str,
+        default=str(DEFAULT_CSV_PATH),
+        help="Path to a processed-style candidate CSV. Defaults to the GitHub-safe sample.",
+    )
+
+    return parser.parse_args()
+
+
 def main() -> None:
     """Run scoring readiness check from the command line."""
-    print(f"Checking scoring readiness for: {DEFAULT_CSV_PATH}")
+    args = parse_args()
 
-    row = read_first_row(DEFAULT_CSV_PATH)
+    csv_path = Path(args.path)
+    if not csv_path.is_absolute():
+        csv_path = PROJECT_ROOT / csv_path
+
+    print(f"Checking scoring readiness for: {csv_path}")
+
+    row = read_first_row(csv_path)
     results = check_scoring_readiness(row)
 
     print("\nSCORING READINESS REPORT")

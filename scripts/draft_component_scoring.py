@@ -1,25 +1,29 @@
 """
-Draft component scoring skeleton for Value Vacation Finder.
+Draft component scoring for Value Vacation Finder.
 
-This script contains early scoring functions for individual vacation-score
-components. It does NOT produce a final total score, final recommendation tier,
-or undervalued label.
+This script contains scoring functions for individual vacation-score
+components. It still does NOT produce a final total score, final
+recommendation tier, or undervalued label — that stays gated behind
+config/scoring_weights.yaml's mvp_scoring_policy.allow_final_total_score,
+which is a human/project-level switch, not something this script flips on
+its own.
 
-Reason:
-Benchmarking and fair-value estimation have not been implemented yet.
-
-Phase 6.6 goal:
-- Create draft component scoring function skeletons.
-- Allow limited draft scoring where data is available.
-- Preserve caveats.
-- Block final scoring.
+price_undervaluation scoring is real (Phase 7): once a candidate row has a
+built benchmark (benchmark_method != "not_yet_built"), it scores using the
+scoring_bands in config/scoring_weights.yaml, with points scaled down by
+benchmark_confidence so a low-confidence estimate can't score as high as a
+high-confidence one. attractions_activity_value stays blocked because
+Viator source validation is still unavailable.
 """
 
 from __future__ import annotations
 
+import argparse
 import csv
 from pathlib import Path
 from typing import Any
+
+import yaml
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -30,6 +34,39 @@ DEFAULT_CSV_PATH = (
     / "sample_processed"
     / "vacation_candidates_sample.csv"
 )
+
+SCORING_CONFIG_PATH = PROJECT_ROOT / "config" / "scoring_weights.yaml"
+
+CONFIDENCE_MULTIPLIER = {"low": 0.5, "medium": 0.75, "high": 1.0}
+
+PRICE_BAND_ORDER = [
+    "exceptional",
+    "strong",
+    "good",
+    "modest",
+    "fair_value",
+    "slightly_overpriced",
+    "materially_overpriced",
+]
+
+
+def _load_scoring_config() -> dict[str, Any]:
+    """Load config/scoring_weights.yaml."""
+    with SCORING_CONFIG_PATH.open("r", encoding="utf-8") as file:
+        return yaml.safe_load(file)
+
+
+def _points_for_discount_pct(discount_pct: float, bands: dict[str, Any]) -> tuple[int, str]:
+    """Find the first matching scoring band (highest discount first) for a discount_pct."""
+    for band_name in PRICE_BAND_ORDER:
+        band = bands[band_name]
+        lower_bound = band.get("discount_pct_min", float("-inf"))
+        upper_bound = band.get("discount_pct_max", float("inf"))
+
+        if lower_bound <= discount_pct <= upper_bound:
+            return band["points"], band_name
+
+    raise ValueError(f"No scoring band matched discount_pct={discount_pct}")
 
 
 def read_first_row(path: Path) -> dict[str, Any]:
@@ -74,21 +111,68 @@ def has_flag(row: dict[str, Any], flag: str) -> bool:
 
 def score_price_undervaluation(row: dict[str, Any]) -> dict[str, Any]:
     """
-    Draft placeholder for price undervaluation scoring.
+    Draft score for price undervaluation.
 
-    This should remain blocked until benchmark/fair-value logic exists.
+    Blocked until a real benchmark exists for this row (benchmark_method
+    set to something other than "not_yet_built"). Once it exists, score
+    using the scoring_bands in config/scoring_weights.yaml, scaled down by
+    benchmark_confidence so a low-confidence estimate never scores as high
+    as a high-confidence one.
     """
+    benchmark_method = row.get("benchmark_method")
+
+    if not benchmark_method or benchmark_method == "not_yet_built":
+        return {
+            "component": "price_undervaluation",
+            "max_points": 30,
+            "score": None,
+            "status": "not_ready",
+            "reason": "Fair-value benchmark is not built yet.",
+            "blocking_flags": [
+                flag
+                for flag in ["fair_value_estimate_missing"]
+                if has_flag(row, flag)
+            ],
+        }
+
+    discount_pct = to_float(row.get("estimated_discount_pct"))
+    confidence = row.get("benchmark_confidence")
+
+    if discount_pct is None:
+        return {
+            "component": "price_undervaluation",
+            "max_points": 30,
+            "score": None,
+            "status": "not_ready",
+            "reason": "benchmark_method is set but estimated_discount_pct is missing.",
+            "blocking_flags": [],
+        }
+
+    if confidence not in CONFIDENCE_MULTIPLIER:
+        return {
+            "component": "price_undervaluation",
+            "max_points": 30,
+            "score": None,
+            "status": "not_ready",
+            "reason": f"benchmark_confidence missing or invalid: {confidence!r}",
+            "blocking_flags": [],
+        }
+
+    scoring_bands = _load_scoring_config()["categories"]["price_undervaluation"]["scoring_bands"]
+    band_points, band_name = _points_for_discount_pct(discount_pct, scoring_bands)
+    score = round(band_points * CONFIDENCE_MULTIPLIER[confidence])
+
+    caveats = [f"scoring_band={band_name}", f"benchmark_confidence={confidence}"]
+    if confidence != "high":
+        caveats.append("score reduced because benchmark_confidence is below high")
+
     return {
         "component": "price_undervaluation",
         "max_points": 30,
-        "score": None,
-        "status": "not_ready",
-        "reason": "Fair-value benchmark is not built yet.",
-        "blocking_flags": [
-            flag
-            for flag in ["fair_value_estimate_missing"]
-            if has_flag(row, flag)
-        ],
+        "score": score,
+        "status": "draft_ready_with_caveats",
+        "reason": "; ".join(caveats),
+        "blocking_flags": [],
     }
 
 
@@ -421,20 +505,64 @@ def run_draft_component_scoring(row: dict[str, Any]) -> list[dict[str, Any]]:
     ]
 
 
+def blocking_reasons(results: list[dict[str, Any]]) -> list[str]:
+    """Human-readable list of everything currently blocking final scoring."""
+    reasons = []
+
+    mvp_policy = _load_scoring_config().get("mvp_scoring_policy", {})
+    if mvp_policy.get("allow_final_total_score") is not True:
+        reasons.append(
+            "config/scoring_weights.yaml mvp_scoring_policy.allow_final_total_score is false "
+            "(project-level switch; not flipped automatically by this script)"
+        )
+
+    for result in results:
+        if result["status"] == "not_ready":
+            reasons.append(f"{result['component']}: not_ready ({result['reason']})")
+        if result.get("blocking_flags"):
+            reasons.append(f"{result['component']}: blocking_flags={result['blocking_flags']}")
+
+    return reasons
+
+
 def final_total_score_is_blocked(results: list[dict[str, Any]]) -> bool:
     """
-    Return True because final scoring is intentionally blocked during MVP.
+    Return True if the final total score should stay blocked.
 
-    This function exists to make the blocking rule explicit.
+    Blocked if the MVP policy switch disallows it (config/scoring_weights.yaml
+    mvp_scoring_policy.allow_final_total_score), or if any component is
+    still not_ready or carries blocking flags.
     """
-    return True
+    return len(blocking_reasons(results)) > 0
+
+
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Run draft component scoring for a processed-style vacation candidate CSV."
+    )
+
+    parser.add_argument(
+        "--path",
+        type=str,
+        default=str(DEFAULT_CSV_PATH),
+        help="Path to a processed-style candidate CSV. Defaults to the GitHub-safe sample.",
+    )
+
+    return parser.parse_args()
 
 
 def main() -> None:
     """Run draft component scoring from the command line."""
-    print(f"Reading candidate CSV: {DEFAULT_CSV_PATH}")
+    args = parse_args()
 
-    row = read_first_row(DEFAULT_CSV_PATH)
+    csv_path = Path(args.path)
+    if not csv_path.is_absolute():
+        csv_path = PROJECT_ROOT / csv_path
+
+    print(f"Reading candidate CSV: {csv_path}")
+
+    row = read_first_row(csv_path)
     results = run_draft_component_scoring(row)
 
     print("\nDRAFT COMPONENT SCORING REPORT")
@@ -452,11 +580,15 @@ def main() -> None:
     print("\nFINAL SCORING STATUS")
     print("--------------------")
 
-    if final_total_score_is_blocked(results):
+    reasons = blocking_reasons(results)
+
+    if reasons:
         print("Final total score: BLOCKED")
         print("Recommendation tier: BLOCKED")
         print("Undervalued label: BLOCKED")
-        print("Reason: Benchmark/fair-value logic is not implemented yet.")
+        print("Reasons:")
+        for reason in reasons:
+            print(f"  - {reason}")
     else:
         print("Final total score may be calculated.")
 

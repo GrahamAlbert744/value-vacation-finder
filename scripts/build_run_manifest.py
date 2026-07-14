@@ -32,7 +32,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 DEFAULT_RUN_ID = "run_20260625_lisbon_20261005_20261016"
 
-RAW_SOURCES = ["travel_advisory", "skyscanner", "expedia", "tripadvisor", "viator"]
+RAW_SOURCES = ["travel_advisory", "skyscanner", "expedia", "tripadvisor", "viator", "benchmark_prices"]
 
 
 def sha256_of_file(path: Path) -> str | None:
@@ -153,14 +153,57 @@ def collect_scoring_outputs() -> dict[str, Any]:
     }
 
 
-def build_manifest(run_id: str, destination_slug: str) -> dict[str, Any]:
+def collect_benchmark_outputs(destination_slug: str) -> dict[str, Any]:
+    """Read the benchmark: section from the real manual candidate, if one exists."""
+    manual_candidates_dir = PROJECT_ROOT / "data" / "interim" / "manual_candidates"
+    candidate_paths = (
+        sorted(manual_candidates_dir.glob(f"{destination_slug}_candidate*.yaml"))
+        if manual_candidates_dir.exists()
+        else []
+    )
+
+    if not candidate_paths:
+        return {"fair_value_estimate_usd": None, "benchmark_method": "not_yet_built"}
+
+    with candidate_paths[0].open("r", encoding="utf-8") as file:
+        candidate_data = yaml.safe_load(file) or {}
+
+    benchmark = candidate_data.get("benchmark", {})
+
+    return {
+        "source_candidate": str(candidate_paths[0].relative_to(PROJECT_ROOT)).replace("\\", "/"),
+        "fair_value_estimate_usd": benchmark.get("fair_value_estimate_usd"),
+        "estimated_discount_pct": benchmark.get("estimated_discount_pct"),
+        "benchmark_method": benchmark.get("benchmark_method", "not_yet_built"),
+        "benchmark_confidence": benchmark.get("benchmark_confidence"),
+        "undervalued_flag": benchmark.get("undervalued_flag"),
+    }
+
+
+def build_manifest(run_id: str, destination_slug: str, run_mode: str) -> dict[str, Any]:
     """Build the full run manifest dict, following manifest_required_sections."""
     search_run_config_path = PROJECT_ROOT / "config" / "search_runs" / f"{run_id}.yaml"
+    benchmark_outputs = collect_benchmark_outputs(destination_slug)
+
+    known_limitations = [
+        "Canadian travel advisory integration is not implemented.",
+        "Passport/visa rules are not implemented.",
+        "Viator activity source validation is unavailable for this run.",
+    ]
+
+    if benchmark_outputs.get("benchmark_method") == "not_yet_built":
+        known_limitations.insert(0, "Benchmark/fair-value logic is not implemented.")
+    elif benchmark_outputs.get("benchmark_confidence") == "low":
+        known_limitations.insert(
+            0,
+            "Benchmark exists but is low-confidence (published cost-index estimate, "
+            "not a live matched-itinerary quote) — treat as directional only.",
+        )
 
     return {
         "run_id": run_id,
         "run_date": datetime.now(timezone.utc).date().isoformat(),
-        "run_mode": "sample",
+        "run_mode": run_mode,
         "workflow": "value_vacation_finder_mvp",
         "environment": collect_environment_metadata(),
         "connector_capture": {
@@ -170,22 +213,14 @@ def build_manifest(run_id: str, destination_slug: str) -> dict[str, Any]:
         "transformed_inputs": collect_transformed_inputs(destination_slug),
         "processed_outputs": collect_processed_outputs(),
         "scoring_outputs": collect_scoring_outputs(),
-        "benchmark_outputs": {
-            "fair_value_estimate_usd": None,
-            "benchmark_method": "not_yet_built",
-        },
+        "benchmark_outputs": benchmark_outputs,
         "reports": {
             "final_shortlist_report": None,
         },
         "parameters": {
             "destination_slug": destination_slug,
         },
-        "known_limitations": [
-            "Benchmark/fair-value logic is not implemented.",
-            "Canadian travel advisory integration is not implemented.",
-            "Passport/visa rules are not implemented.",
-            "Viator activity source validation is unavailable for this run.",
-        ],
+        "known_limitations": known_limitations,
     }
 
 
@@ -209,6 +244,14 @@ def parse_args() -> argparse.Namespace:
         help="Destination slug used in raw connector file names.",
     )
 
+    parser.add_argument(
+        "--run-mode",
+        type=str,
+        default="sample",
+        choices=["sample", "live_manual", "historical_manual"],
+        help="Run mode per Section 3 of references/project_full_instructions.md.",
+    )
+
     return parser.parse_args()
 
 
@@ -216,7 +259,7 @@ def main() -> None:
     """Build and write a run manifest."""
     args = parse_args()
 
-    manifest = build_manifest(args.run_id, args.destination_slug)
+    manifest = build_manifest(args.run_id, args.destination_slug, args.run_mode)
 
     output_dir = PROJECT_ROOT / "data" / "run_manifests"
     output_dir.mkdir(parents=True, exist_ok=True)

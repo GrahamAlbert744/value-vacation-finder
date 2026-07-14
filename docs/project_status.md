@@ -6,13 +6,14 @@ Value Vacation Finder
 
 ## Current Phase
 
-Phase 6 — Draft scoring and scoring-readiness tooling
+Phase 7 — Benchmarking (first real, low-confidence pass complete)
 
 > Note: this document previously said "Phase 1" while the project had
 > already progressed through candidate construction, processed-CSV tooling,
-> and draft scoring. Updated 2026-07-07 during a full project audit to
-> reflect actual repo state. See `docs/known_limitations.md` for the
-> matching "completed / not yet completed" list and
+> and draft scoring. Updated 2026-07-07 during a full project audit, and
+> again 2026-07-13 after the first real benchmark pass, to reflect actual
+> repo state. See `docs/known_limitations.md` for the matching
+> "completed / not yet completed" list and
 > `references/project_full_instructions.md` for the full operating policy.
 
 ## Project Goal
@@ -268,17 +269,38 @@ intentionally blocked until benchmarking exists.
 
 ---
 
-## Current Step
+## Completed Phases (continued)
 
 ### Phase 7 — Benchmarking
 
-Status: Not started (scaffolding only)
+Status: First real pass complete (low confidence)
 
-`src/value_vacation_finder/benchmarking/fair_value.py` defines the
-`not_yet_built` status constant and raises `NotImplementedError` for
-`estimate_fair_value()`/`calculate_discount_pct()` so callers get an
-explicit block rather than a fabricated number. Real benchmarking requires
-comparable price data that has not been captured yet.
+`src/value_vacation_finder/benchmarking/fair_value.py` implements a
+bottom-up, component-based benchmark: `estimate_fair_value()` sums sourced
+comparable costs (flights, hotel, activities, food+transport) and
+`calculate_discount_pct()` compares that against
+`actual_estimated_trip_cost_usd`. Callers must supply real, sourced
+component costs — the functions raise rather than fabricate a missing
+component.
+
+For the Lisbon run, comparable prices were researched via web search
+(published cost-index/aggregator data, not a live matched-itinerary
+quote) and recorded in
+`data/raw/benchmark_prices/run_20260625_lisbon_20261005_20261016_benchmark_prices_lisbon.md`,
+including a documented disagreement between the bottom-up estimate and a
+top-down peer-basket cross-check. This is why `benchmark_confidence` is
+recorded as `low` on the real candidate
+(`data/interim/manual_candidates/lisbon_candidate_001.yaml`):
+`fair_value_estimate_usd: $5,240`, `estimated_discount_pct: 18.04%`,
+`undervalued_flag: directionally_undervalued_low_confidence`.
+
+`scripts/draft_component_scoring.py`'s `score_price_undervaluation()` now
+scores this for real (20-point "good" band, halved by the low-confidence
+multiplier to 10/30) instead of always returning `not_ready`. The overall
+final score/tier/undervalued label remain correctly `BLOCKED` — both
+because `config/scoring_weights.yaml`'s `mvp_scoring_policy.allow_final_total_score`
+is still `false`, and because `attractions_activity_value` and
+`practicality_friction` are still `not_ready`.
 
 ---
 
@@ -313,6 +335,10 @@ run manifest (`scripts/build_run_manifest.py`, `data/run_manifests/`).
 
 ## Next Immediate Step
 
-Capture real comparable-price benchmark data for the Lisbon run (or a
-newly defined run) so Phase 7 can move from scaffolding to a real
-`fair_value_estimate_usd`.
+Raise benchmark confidence above "low" (a live, date-matched flight/hotel
+quote would let `estimated_discount_pct` be trusted more than the current
+published-cost-index estimate), and/or unblock `attractions_activity_value`
+and `practicality_friction` — a real Viator activity capture and a real
+Canadian/U.S. entry-requirements lookup (`config/entry_requirements_template.yaml`)
+are the two concrete blockers keeping the final total score off, even
+though price_undervaluation now has a real draft score.

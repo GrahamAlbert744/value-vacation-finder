@@ -1,13 +1,13 @@
 run_id: run_20260625_lisbon_20261005_20261016
-run_date: '2026-07-07'
-run_mode: sample
+run_date: '2026-07-14'
+run_mode: historical_manual
 workflow: value_vacation_finder_mvp
 environment:
   python_version: 3.11.15
   conda_environment: value-vacation-finder
   git_branch: main
-  git_commit: 92f1bd570b7650a058c6e85188aacb303d7024ab
-  run_timestamp: '2026-07-07T20:44:04.859820+00:00'
+  git_commit: 14e8de654da3bcc3c7ba13fecbe30d3b08b6340c
+  run_timestamp: '2026-07-14T01:56:11.007962+00:00'
 connector_capture:
   search_run_config:
     path: config/search_runs/run_20260625_lisbon_20261005_20261016.yaml
@@ -40,12 +40,17 @@ raw_inputs:
     exists: true
     size_bytes: 1717
     sha256: 9b20f97af73f24f19fc5bd8e0be6cb64c3181cf8f59a6dd4314b1166a373e2a0
+  benchmark_prices:
+    path: data/raw/benchmark_prices/run_20260625_lisbon_20261005_20261016_benchmark_prices_lisbon.md
+    exists: true
+    size_bytes: 7764
+    sha256: add6ba650ac5da2dc33b75f6a605a2cc3fabccb8d4a217b9f0eb44e1cb5925d4
 transformed_inputs:
   manual_candidates:
   - path: data/interim/manual_candidates/lisbon_candidate_001.yaml
     exists: true
-    size_bytes: 3931
-    sha256: f1c44c148084331e1a6de95cda5ed573ff0f298eb7291954da68bb14cf02cd84
+    size_bytes: 4797
+    sha256: 84557e149a7664e4725c38f0ba40f51835b83344bb093de3a0bd2b21343f6d54
   sample_candidate:
     path: references/sample_candidates/sample_lisbon_candidate.yaml
     exists: true
@@ -55,13 +60,13 @@ processed_outputs:
   sample_processed_csv:
     path: references/sample_processed/vacation_candidates_sample.csv
     exists: true
-    size_bytes: 2645
-    sha256: 41ddb513ad729ee4e5ff068e61561020341830a0f7926b208fc3542dd876a11d
+    size_bytes: 2702
+    sha256: f741603b90ed2c85ca1afae2daee3750cf4b14addbe211f3330d045dadfcf017
   real_processed_csv:
     path: data/processed/vacation_candidates/vacation_candidates.csv
-    exists: false
-    size_bytes: null
-    sha256: null
+    exists: true
+    size_bytes: 2945
+    sha256: c73837939087eef3feb49cfb919ea2f831ce7c67b30bbfdde725c4ff182458e1
 scoring_outputs:
   scoring_weights_config:
     path: config/scoring_weights.yaml
@@ -69,14 +74,19 @@ scoring_outputs:
     size_bytes: 7503
     sha256: c9ba8c4985561308558982596720ab91a6e09088cffa10432b2e6097e71816fa
 benchmark_outputs:
-  fair_value_estimate_usd: null
-  benchmark_method: not_yet_built
+  source_candidate: data/interim/manual_candidates/lisbon_candidate_001.yaml
+  fair_value_estimate_usd: 5240.0
+  estimated_discount_pct: 0.1804
+  benchmark_method: published_cost_index_peer_average_v1
+  benchmark_confidence: low
+  undervalued_flag: directionally_undervalued_low_confidence
 reports:
   final_shortlist_report: null
 parameters:
   destination_slug: lisbon
 known_limitations:
-- Benchmark/fair-value logic is not implemented.
+- "Benchmark exists but is low-confidence (published cost-index estimate, not a live\
+  \ matched-itinerary quote) \u2014 treat as directional only."
 - Canadian travel advisory integration is not implemented.
 - Passport/visa rules are not implemented.
 - Viator activity source validation is unavailable for this run.
